@@ -10,8 +10,7 @@ use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-
-class KategotiController extends Controller
+class KategoriController extends Controller
 {
     /**
      * Display a listing of the resource.

@@ -27,7 +27,7 @@ class ChartOfAccountController extends Controller
         }catch(\Exception $e){
             return response()->json([
                 'status' => false,
-                'message' => 'data gagal dipanggil',
+                'message' => 'gagal memanggil data',
                 'error' => $e->getMessage(),
             ]);
         }
@@ -40,10 +40,20 @@ class ChartOfAccountController extends Controller
     {
         try{
             DB::beginTransaction();
+            $coa = ChartOfAccount::create($request->validated());
 
             DB::commit();
+            return response()->json([
+                'status' => true,
+                'data' => new ChartOfAccountResource($coa),
+            ]);
         }catch(\Exception $e){
             DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => 'gagal menambahkan data',
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
@@ -53,10 +63,24 @@ class ChartOfAccountController extends Controller
     public function show(string $id)
     {
         try{
+            $coa = ChartOfAccount::find($id);
 
+            if(!$coa){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'data tidak di temukan'
+                ],404);
+            }
+
+            return response()->json([
+                'status' => true,
+                'data' => new ChartOfAccountResource($coa),
+            ]);
         }catch(\Exception $e){
             return response()->json([
-
+                'status' => false,
+                'message' => 'galgal memanggil data',
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -68,11 +92,26 @@ class ChartOfAccountController extends Controller
     {
         try{
             DB::beginTransaction();
+            $coa = ChartOfAccount::find($id);
 
+            if(!$coa){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'data tidak di temukan'
+                ],404);
+            }
             DB::commit();
+            return response()->json([
+                'status' => true,
+                'data' => new ChartOfAccountResource($coa),
+            ]);
         }catch(\Exception $e){
             DB::rollBack();
-
+            return response()->json([
+                'status' => false,
+                'message' => 'gagal memperbarui data',
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 
@@ -83,10 +122,28 @@ class ChartOfAccountController extends Controller
     {
         try{
             DB::beginTransaction();
+            $coa = ChartOfAccount::find($id);
+
+            if(!$coa){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'data tidak di temukan'
+                ],404);
+            }
+            $coa->delete();
 
             DB::commit();
+            return response()->json([
+                'status' => true,
+                'data' => new ChartOfAccountResource($coa),
+            ]);
         }catch(\Exception $e){
             DB::rollBack();
+            return response()->json([
+                'status' => false,
+                'message' => 'gagal menghapus data',
+                'error' => $e->getMessage(),
+            ]);
         }
     }
 }
