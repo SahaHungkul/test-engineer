@@ -14,12 +14,12 @@ class ChartOfAccount extends Model
     protected $fillable = [
         'kode',
         'nama',
-        'kategori',
+        'kategori_id',
     ];
 
     public function kategori()
     {
-        return $this->belongsTo(Kategori::class, 'kategori', 'id');
+        return $this->belongsTo(Kategori::class, 'kategori_id', 'id');
     }
     public function transaksi()
     {

@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Store\StoreChartOfAccountRequest;
-use App\Http\Requests\Update\UpdateCoaRequest;
-use App\Http\Resources\ChartOfAccountResource;
+use App\Models\Transaksi;
+use App\Http\Requests\Store\StoreTransaksiRequest;
+use App\Http\Resources\TransaksiResource;
 use Illuminate\Support\Facades\DB;
-use App\Models\ChartOfAccount;
 use Illuminate\Http\Request;
 
-class ChartOfAccountController extends Controller
+class TransaksiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,12 +17,10 @@ class ChartOfAccountController extends Controller
     public function index()
     {
         try{
-            $coa = ChartOfAccount::all();
-
+            $transaksi = Transaksi::all();
             return response()->json([
                 'status' => true,
-                'message' => 'data berhasil dipanggil',
-                'data' => ChartOfAccountResource::collection($coa)
+                'data' => new TransaksiResource($transaksi)
             ]);
         }catch(\Exception $e){
             return response()->json([
@@ -32,22 +29,23 @@ class ChartOfAccountController extends Controller
                 'error' => $e->getMessage(),
             ]);
         }
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreChartOfAccountRequest $request)
+    public function store(StoreTransaksiRequest $request)
     {
         try{
             DB::beginTransaction();
-            $coa = ChartOfAccount::create($request->validated());
+
+            $transaksi = Transaksi::create($request->validated());
 
             DB::commit();
             return response()->json([
                 'status' => true,
-                'message' => 'data berhasil dibuat',
-                'data' => new ChartOfAccountResource($coa),
+                'data' => new TransaksiResource($transaksi),
             ]);
         }catch(\Exception $e){
             DB::rollBack();
@@ -65,24 +63,22 @@ class ChartOfAccountController extends Controller
     public function show(string $id)
     {
         try{
-            $coa = ChartOfAccount::find($id);
+            $transaksi = Transaksi::find($id);
 
-            if(!$coa){
+            if(!$transaksi){
                 return response()->json([
                     'status' => false,
-                    'message' => 'data tidak di temukan'
+                    'message' => 'data tidak di temukan',
                 ],404);
             }
-
             return response()->json([
                 'status' => true,
-                'data' => new ChartOfAccountResource($coa),
+                'data' => new TransaksiResource($transaksi),
             ]);
         }catch(\Exception $e){
             return response()->json([
                 'status' => false,
-                'message' => 'gagal memanggil data',
-                'error' => $e->getMessage(),
+                'message' => 'gagal mengambil data',
             ]);
         }
     }
@@ -90,36 +86,9 @@ class ChartOfAccountController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateCoaRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
-        try{
-            DB::beginTransaction();
 
-            $coa = ChartOfAccount::find($id);
-
-            if(!$coa){
-                return response()->json([
-                    'status' => false,
-                    'message' => 'data tidak di temukan'
-                ],404);
-            }
-            $coa->update($request->validated());
-            $coa->refresh();
-
-            DB::commit();
-            return response()->json([
-                'status' => true,
-                'message' => 'data berhasil diperbarui',
-                'data' => new ChartOfAccountResource($coa),
-            ],200);
-        }catch(\Exception $e){
-            DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'message' => 'gagal memperbarui data',
-                'error' => $e->getMessage(),
-            ],500);
-        }
     }
 
     /**
@@ -129,20 +98,19 @@ class ChartOfAccountController extends Controller
     {
         try{
             DB::beginTransaction();
-            $coa = ChartOfAccount::find($id);
+            $transaksi = Transaksi::find($id);
 
-            if(!$coa){
+            if (!$transaksi){
                 return response()->json([
                     'status' => false,
-                    'message' => 'data tidak di temukan'
+                    'message' => 'data tidak di temukan',
                 ],404);
             }
-            $coa->delete();
 
             DB::commit();
             return response()->json([
                 'status' => true,
-                'message' => 'data berhasil dihapus',
+                'data' => new TransaksiResource($transaksi),
             ]);
         }catch(\Exception $e){
             DB::rollBack();

@@ -15,7 +15,7 @@ class KategoriResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'kategori_id' => $this->id,
+            'id' => $this->id,
             'nama' => $this->nama,
         ];
     }

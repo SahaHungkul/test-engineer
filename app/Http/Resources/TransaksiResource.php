@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ChartOfAccountResource extends JsonResource
+class TransaksiResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,14 @@ class ChartOfAccountResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'kode' => $this->kode,
-            'nama' => $this->nama,
-            'kategori' => [
-                'id' => $this->kategori->id,
-                'nama' => $this->kategori->nama,
+            'coa' => [
+                'id' => $this->chart_of_account->id,
+                'kode' => $this->chart_of_account->kode,
+                'nama' => $this->chart_of_account->nama,
             ],
+            'deskripsi' => $this->deskripsi,
+            'debit' => $this->debit,
+            'kredit' => $this->kredit,
         ];
     }
 }

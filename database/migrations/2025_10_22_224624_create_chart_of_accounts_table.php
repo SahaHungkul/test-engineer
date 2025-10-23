@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('kode')->unique();
             $table->string('nama');
-            $table->foreignId('kategori')->constrained('kategori')->onDelete('cascade');
+            $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('cascade');
             $table->timestamps();
         });
     }

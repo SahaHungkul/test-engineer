@@ -4,7 +4,7 @@ namespace App\Http\Requests\Store;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreChartOfAccountRequest extends FormRequest
+class StoreTransaksiRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,11 @@ class StoreChartOfAccountRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'kode' => 'required|integer|unique:chart_of_accounts,kode',
-            'nama' => 'required|string|max:255',
-            'kategori_id' => 'required|exists:kategoris,id'
+            'tanggal' => 'required|date',
+            'coa_id' => 'required|exists:chart_of_accounts,id',
+            'deskripsi' => 'nullable|text',
+            'debit' => 'required|decimal',
+            'kredit' => 'required|decimal',
         ];
     }
 }

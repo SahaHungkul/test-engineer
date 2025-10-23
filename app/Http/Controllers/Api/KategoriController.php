@@ -22,14 +22,14 @@ class KategoriController extends Controller
 
             return response()->json([
                 'status' => true,
-                'data' => new KategoriResource($kategori),
-            ]);
+                'data' => KategoriResource::collection($kategori),
+            ],201);
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
                 'message' => 'terjadi kesalahan saat mengambil data',
                 'error' => $e->getMessage(),
-            ]);
+            ],500);
         }
     }
 
@@ -40,6 +40,7 @@ class KategoriController extends Controller
     {
         try {
             DB::beginTransaction();
+
             $kategori = Kategori::create($request->validated());
 
             DB::commit();
@@ -93,19 +94,19 @@ class KategoriController extends Controller
             DB::beginTransaction();
 
             $kategori = Kategori::find($id);
-            if ($kategori) {
+            if (!$kategori) {
                 return response()->json([
                     'status' => false,
                     'message' => 'kategori tidak di temukan',
 
-                ],404);
+                ], 404);
             }
 
             $kategori->update($request->validated());
 
             DB::commit();
             return response()->json([
-                'status' => false,
+                'status' => true,
                 'data' => new KategoriResource($kategori),
             ]);
         } catch (\Exception $e) {
@@ -123,27 +124,27 @@ class KategoriController extends Controller
      */
     public function destroy(string $id)
     {
-        try{
+        try {
             DB::beginTransaction();
             $kategori = Kategori::find($id);
-            if(!$kategori){
+            if (!$kategori) {
                 return response()->json([
-                    'status' =>false,
+                    'status' => false,
                     'message' => 'Kategori tidak ditemukan'
-                ],404);
+                ], 404);
             }
             $kategori->delete();
 
             DB::commit();
             return response()->json([
                 'status' => true,
-                'data' => new KategoriResource($kategori),
+                'message' => 'data berhasil dihapus'
             ]);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => false,
-                'message' => 'gagal menghapus kategori',
+                'message' => 'gagal menghapus data',
                 'error' => $e->getMessage(),
             ]);
         }
