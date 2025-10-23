@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->date('tanggal');
             $table->foreignId('chart_of_account.id')->constrained('');
-            $table->text('deskripsi');
+            $table->text('deskripsi')->nullable();
             $table->int('debit');
             $table->int('kredit');
             $table->timestamps();
