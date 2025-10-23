@@ -12,5 +12,8 @@ class Kategori extends Model
 
     protected $fillable = 'name';
 
-    // public function 
+    public function coa()
+    {
+        return $this->hasMany(ChartOfAccount::class, 'kategori', 'id');
+    }
 }

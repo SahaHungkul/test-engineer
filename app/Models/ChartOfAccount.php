@@ -16,4 +16,13 @@ class ChartOfAccount extends Model
         'nama',
         'kategori',
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class, 'kategori', 'id');
+    }
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'coa_id', 'id');
+    }
 }

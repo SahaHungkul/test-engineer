@@ -16,4 +16,9 @@ class Transaksi extends Model
         'debit',
         'kredit',
     ];
+
+    public function coa()
+    {
+        return $this->belongsTo(ChartOfAccount::class,'coa_id', 'id');
+    }
 }

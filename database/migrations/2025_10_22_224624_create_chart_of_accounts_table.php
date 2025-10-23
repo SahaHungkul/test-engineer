@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('chart_of_accounts', function (Blueprint $table) {
             $table->id();
-            $table->int('kode');
+            $table->integer('kode')->unique();
             $table->string('nama');
-            $table->foreignId('kategori.id')->constrained('kategori')->onDelete('cascade');
+            $table->foreignId('kategori')->constrained('kategori')->onDelete('cascade');
             $table->timestamps();
         });
     }

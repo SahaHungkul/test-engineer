@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
             $table->date('tanggal');
-            $table->foreignId('chart_of_account.id')->constrained('');
+            $table->foreignId('chart_of_account_id')->constrained('chart_of_account')->onDelete('cascade');
             $table->text('deskripsi')->nullable();
-            $table->int('debit');
-            $table->int('kredit');
+            $table->integer('debit');
+            $table->integer('kredit');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('transaksis');
+        Schema::dropIfExists('transaksi');
     }
 };
