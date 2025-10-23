@@ -24,9 +24,17 @@ class StoreTransaksiRequest extends FormRequest
         return [
             'tanggal' => 'required|date',
             'coa_id' => 'required|exists:chart_of_accounts,id',
-            'deskripsi' => 'nullable|text',
-            'debit' => 'required|decimal',
-            'kredit' => 'required|decimal',
+            'deskripsi' => 'nullable|string',
+            'debit' => [
+                'required',
+                'numeric',
+                'regex:/^\d{1,13}(\.\d{1,2})?$/'
+            ],
+            'kredit' => [
+                'required',
+                'numeric',
+                'regex:/^\d{1,13}(\.\d{1,2})?$/'
+            ],
         ];
     }
 }

@@ -12,11 +12,15 @@ class Transaksi extends Model
     protected $table = 'transaksis';
     protected $fillable = [
         'tanggal',
+        'coa_id',
         'deskripsi',
         'debit',
         'kredit',
     ];
-
+    protected $casts = [
+        'debit' => 'decimal:2',
+        'kredit' => 'decimal:2',
+    ];
     public function coa()
     {
         return $this->belongsTo(ChartOfAccount::class,'coa_id', 'id');

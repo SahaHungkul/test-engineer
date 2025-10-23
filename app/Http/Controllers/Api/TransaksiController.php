@@ -16,66 +16,66 @@ class TransaksiController extends Controller
      */
     public function index()
     {
-        try{
+        try {
             $transaksi = Transaksi::all();
             return response()->json([
                 'status' => true,
-                'data' => new TransaksiResource($transaksi)
+                'message' => 'data Transaksi berhasil diambil',
+                'data' => TransaksiResource::collection($transaksi),
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
                 'message' => 'gagal memanggil data',
                 'error' => $e->getMessage(),
             ]);
         }
-
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreTransaksiRequest $request)
-    {
-        try{
-            DB::beginTransaction();
+{
+    return DB::transaction(function () use ($request) {
+        $transaksi = Transaksi::create($request->validated());
 
-            $transaksi = Transaksi::create($request->validated());
-
-            DB::commit();
-            return response()->json([
-                'status' => true,
-                'data' => new TransaksiResource($transaksi),
-            ]);
-        }catch(\Exception $e){
-            DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'message' => 'gagal menambahkan data',
-                'error' => $e->getMessage(),
-            ]);
+        if (!$request->validated()) {
+            throw new \Exception('Data tidak valid');
         }
-    }
+
+        if (!$transaksi->coa_id) {
+            throw new \Exception('COA ID tidak tersimpan atau tidak valid');
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Transaksi telah berhasil',
+            'data' => new TransaksiResource($transaksi),
+        ], 200);
+    });
+}
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        try{
+        try {
             $transaksi = Transaksi::find($id);
 
-            if(!$transaksi){
+            if (!$transaksi) {
                 return response()->json([
                     'status' => false,
                     'message' => 'data tidak di temukan',
-                ],404);
+                ], 404);
             }
             return response()->json([
                 'status' => true,
+                'message' => 'Data Transaksi berhasil di ambil',
                 'data' => new TransaksiResource($transaksi),
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
                 'message' => 'gagal mengambil data',
@@ -86,33 +86,30 @@ class TransaksiController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-
-    }
+    public function update(Request $request, string $id) {}
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        try{
+        try {
             DB::beginTransaction();
             $transaksi = Transaksi::find($id);
 
-            if (!$transaksi){
+            if (!$transaksi) {
                 return response()->json([
                     'status' => false,
                     'message' => 'data tidak di temukan',
-                ],404);
+                ], 404);
             }
 
             DB::commit();
             return response()->json([
                 'status' => true,
-                'data' => new TransaksiResource($transaksi),
+                'message' => 'data transaksi berhasil di hapus'
             ]);
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
                 'status' => false,

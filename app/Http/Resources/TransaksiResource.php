@@ -16,11 +16,11 @@ class TransaksiResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'coa' => [
-                'id' => $this->chart_of_account->id,
-                'kode' => $this->chart_of_account->kode,
-                'nama' => $this->chart_of_account->nama,
-            ],
+            'coa' => $this->coa ? [
+                'id' => $this->coa->id,
+                'kode' => $this->coa->kode,
+                'nama' => $this->coa->nama,
+            ] : null,
             'deskripsi' => $this->deskripsi,
             'debit' => $this->debit,
             'kredit' => $this->kredit,
