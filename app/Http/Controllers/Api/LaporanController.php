@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exports\LaporanExport;
 use App\Http\Controllers\Controller;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LaporanController extends Controller
 {
+    public function exportTransaksi(){
+        return Excel::download(new LaporanExport,'profit/loss.xlsx');
+    }
     public function laporan(){
         $data = Transaksi::with('coa')
         ->orderBy('tanggal','asc')
